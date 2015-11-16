@@ -19,6 +19,12 @@ SOMC_PLATFORM := yukon
 DEVICE_PACKAGE_OVERLAYS += \
     device/sony/yukon/overlay
 
+$(call inherit-product-if-exists, vendor/cm/config/common_full.mk)
+
+ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
+SEC := qcom
+endif
+
 PRODUCT_COPY_FILES += \
     $(SONY_ROOT)/ueventd.yukon.rc:root/ueventd.yukon.rc \
     $(SONY_ROOT)/init.yukon.rc:root/init.yukon.rc \
@@ -28,7 +34,7 @@ PRODUCT_COPY_FILES += \
     $(SONY_ROOT)/system/etc/wifi/wpa_supplicant_overlay.conf:system/etc/wifi/wpa_supplicant_overlay.conf \
     $(SONY_ROOT)/system/etc/wifi/p2p_supplicant_overlay.conf:system/etc/wifi/p2p_supplicant_overlay.conf \
     $(SONY_ROOT)/system/etc/init.yukon.bt.sh:system/etc/init.yukon.bt.sh \
-    $(SONY_ROOT)/system/etc/sec_config:system/etc/sec_config \
+    $(SONY_ROOT)/system/etc/sec_config$(SEC):system/etc/sec_config \
     $(SONY_ROOT)/system/etc/sensors_settings:system/etc/sensors_settings \
     $(SONY_ROOT)/system/etc/gps.conf:system/etc/gps.conf
  

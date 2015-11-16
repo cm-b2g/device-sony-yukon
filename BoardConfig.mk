@@ -36,7 +36,7 @@ BOARD_RAMDISK_OFFSET     := 0x02000000
 BOARD_KERNEL_BOOTIMG := true
 BOARD_CUSTOM_MKBOOTIMG := mkqcdtbootimg
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --dt_dir $(OUT)/dtbs --dt_version 2
+BOARD_MKBOOTIMG_ARGS += --dt_dir $(OUT)/obj/KERNEL_OBJ/arch/arm/boot/dts --dt_version 2
 
 BOARD_KERNEL_CMDLINE := androidboot.hardware=yukon androidboot.selinux=permissive
 BOARD_KERNEL_CMDLINE += user_debug=31 msm_rtb.filter=0x37
@@ -115,11 +115,20 @@ ifeq ($(HOST_OS),linux)
     WITH_DEXPREOPT ?= true
 endif
 
+ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
+BUILD_KERNEL := false
+TARGET_KERNEL_SOURCE := kernel
+else
 BUILD_KERNEL := true
 -include vendor/sony/kernel/KernelConfig.mk
+endif
+
+# Extra mk import in BoardConfig.mk (many useful defaults)
+-include vendor/cm/BoardConfig.mk
 
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
+-include vendor/cm/sepolicy/sepolicy.mk
 
 BOARD_SEPOLICY_DIRS += \
     device/sony/yukon/sepolicy
